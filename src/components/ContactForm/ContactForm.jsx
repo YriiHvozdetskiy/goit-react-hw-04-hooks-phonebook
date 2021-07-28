@@ -4,7 +4,7 @@ import { DebounceInput } from 'react-debounce-input';
 
 import s from './ContactForm.module.scss';
 
-export const  ContactForm =({coincidence,onSubmit})=>{
+export const  ContactForm =({coincidence= true ,onSubmit})=>{
   const [name,setName]= useState('')
   const [number,setNumber]= useState('')
 

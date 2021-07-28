@@ -1,24 +1,21 @@
 import { nanoid } from 'nanoid';
+import { useEffect, useState } from 'react';
 
 import Filter from 'components/Filter/Filter';
 import { ContactForm } from './components/ContactForm/ContactForm';
 import Title from './components/Title/Title';
 import ContactList from 'components/ContactList/ContactList';
-import { useEffect, useState } from 'react';
 
 export function App () {
-  const [contacts,setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ])
+  const [contacts,setContacts] = useState(()=>{
+    return JSON.parse(window.localStorage.getItem('contacts')) ?? ''
+  })
 
   const [filter,setFilter]= useState('')
 
-  // useEffect(()=>{
-  //    JSON.parse(window.localStorage.setItem('contacts',JSON.stringify(contacts)))
-  // },[contacts])
+  useEffect(()=>{
+    window.localStorage.setItem('contacts',JSON.stringify(contacts))
+  },[contacts])
 
 
   const addContact = (name, number) => {
@@ -39,25 +36,20 @@ export function App () {
   };
 
   const getVisibleContacts = () => {
-    // if (!contacts) {
-    //   return [
-    //     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    //     { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    //     { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    //     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    //   ]
-    // }
+    if (!contacts) return
+
     const normalizedFilter = filter.toLowerCase();
    return  contacts.filter(({name})=> name.toLowerCase().includes(normalizedFilter))
   };
 
 
   const  handleCoincidence = currentName => {
+    if (!contacts) return
+
     if (contacts.find(({ name }) => name.toLowerCase() === currentName)) {
       alert(`${currentName} is already in contacts`);
       return true;
     }
-
   };
   return (
       <>
@@ -67,7 +59,7 @@ export function App () {
           coincidence={handleCoincidence}
         />
         <Title>Contacts</Title>
-        <Filter value={filter} onChange={changeFilter} />
+        {contacts.length !== 0 && <Filter value={filter} onChange={changeFilter} />}
         <ContactList
           contacts={getVisibleContacts()}
           deleteContact={deleteContact}
