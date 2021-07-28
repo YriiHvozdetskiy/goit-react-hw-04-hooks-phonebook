@@ -1,42 +1,53 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { DebounceInput } from 'react-debounce-input';
+
 import s from './ContactForm.module.scss';
 
-class ContactForm extends Component {
-  nameInputId = nanoid();
-  phoneInpudId = nanoid();
+export const  ContactForm =({coincidence,onSubmit})=>{
+  const [name,setName]= useState('')
+  const [number,setNumber]= useState('')
 
-  state = {
-    name: '',
-    number: '',
-  };
+  const nameInputId = nanoid();
+  const phoneInputId = nanoid();
 
-  hanldeChange = e => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+
+    switch (name) {
+      case 'name':
+        setName(value)
+        break;
+
+        case 'number':
+        setNumber(value)
+        break;
+
+      default:
+        return;
+    }
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    if (this.props.coincidence(this.state.name.toLowerCase())) return;
+    if (coincidence(name.toLowerCase())) return;
+    
+    onSubmit(name, number);
 
-    this.props.onSubmit(this.state.name, this.state.number);
-
-    this.setState({ name: '', number: '' });
+    setName('')
+    setNumber('')
   };
 
-  render() {
     return (
       <>
         <form
           className={s.form}
           autoComplete="off"
-          onSubmit={this.handleSubmit}
+          onSubmit={handleSubmit}
         >
           <>
-            <label className={s.label} htmlFor={this.nameInputId}>
+            <label className={s.label} htmlFor={nameInputId}>
               Name
             </label>
             <DebounceInput
@@ -45,10 +56,10 @@ class ContactForm extends Component {
               pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
               title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
               required
-              id={this.nameInputId}
-              value={this.state.name}
+              id={nameInputId}
+              value={name}
               debounceTimeout={300}
-              onChange={this.hanldeChange}
+              onChange={handleChange}
             />
 
             {/* <input
@@ -58,36 +69,36 @@ class ContactForm extends Component {
               pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
               title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
               required
-              id={this.nameInputId}
-              onChange={this.handleName}
-              value={this.state.name}
+              id={nameInputId}
+              onChange={handleName}
+              value={name}
             /> */}
 
-            <label className={s.label} htmlFor={this.phoneInpudId}>
+            <label className={s.label} htmlFor={phoneInputId}>
               Number
             </label>
             <DebounceInput
               className={s.input}
               type="tel"
               name="number"
-              id={this.phoneInpudId}
-              value={this.state.number}
+              id={phoneInputId}
+              value={number}
               pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
               title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
               required
               debounceTimeout={300}
-              onChange={this.hanldeChange}
+              onChange={handleChange}
             />
             {/* <input
               className={s.input}
               type="tel"
               name="number"
-              id={this.phoneInpudId}
+              id={phoneInputId}
               pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
               title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
               required
-              onChange={this.handleNumber}
-              value={this.state.number}
+              onChange={handleNumber}
+              value={state.number}
             /> */}
 
             <button className={s.button} type="submit">
@@ -97,7 +108,5 @@ class ContactForm extends Component {
         </form>
       </>
     );
-  }
 }
 
-export default ContactForm;
