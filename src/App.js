@@ -42,7 +42,6 @@ export function App () {
    return  contacts.filter(({name})=> name.toLowerCase().includes(normalizedFilter))
   };
 
-
   const  handleCoincidence = currentName => {
     if (!contacts) return
 
