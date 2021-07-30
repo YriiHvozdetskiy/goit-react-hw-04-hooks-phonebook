@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
-import toast, { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 import Filter from 'components/Filter/Filter';
 import { ContactForm } from './components/ContactForm/ContactForm';
@@ -17,7 +17,6 @@ export function App () {
   useEffect(()=>{
     window.localStorage.setItem('contacts',JSON.stringify(contacts))
   },[contacts])
-
 
 
   const addContact = (name, number) => {
@@ -51,8 +50,6 @@ export function App () {
     if (!contacts) return
 
     if (contacts.find(({ name }) => name.toLowerCase() === currentName)) {
-      // alert(`${currentName} is already in contacts`);
-
       toast.error(`${currentName} is already in contacts`);
       return true;
     }
