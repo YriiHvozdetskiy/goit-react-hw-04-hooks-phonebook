@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import toast, { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 
 import Filter from 'components/Filter/Filter';
@@ -18,17 +19,21 @@ export function App () {
   },[contacts])
 
 
+
   const addContact = (name, number) => {
     const contact = { id: nanoid(), name, number };
 
     setContacts(prev=>{
       return [contact, ...prev]
     })
+
+    toast.success(`${name} added a contact`);
   };
 
   const deleteContact = e => {
     const id = e.currentTarget.id;
     setContacts(contacts.filter(n => n.id !== id))
+    toast.success(`deleted contact`);
   };
 
   const changeFilter = e => {
@@ -46,7 +51,9 @@ export function App () {
     if (!contacts) return
 
     if (contacts.find(({ name }) => name.toLowerCase() === currentName)) {
-      alert(`${currentName} is already in contacts`);
+      // alert(`${currentName} is already in contacts`);
+
+      toast.error(`${currentName} is already in contacts`);
       return true;
     }
   };
@@ -62,6 +69,22 @@ export function App () {
         <ContactList
           contacts={getVisibleContacts()}
           deleteContact={deleteContact}
+        />
+        <Toaster
+          toastOptions={{
+            success: {
+              style: {
+                background: 'green',
+                color:'#fff',
+              },
+            },
+            error: {
+              style: {
+                background: 'red',
+                color:'#fff',
+              },
+            },
+          }}
         />
       </>
     );
